@@ -1,5 +1,5 @@
 # Pokémon Search Card
-✅ Description
+## Description
 Search and display Pokémon data using the PokéAPI.
 
 ## 💡 Features
