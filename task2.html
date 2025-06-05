@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f00; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .pokedex-container {
+            background-color: #f00; 
+            border-radius: 10px;
+            padding: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .pokedex-header {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 0;
+            text-align: left;
+            padding: 15px 20px;
+            background-color: #f03c3c; 
+            position: relative; 
+            
+        }
+
+        .pokedex-header .circle {
+            width: 25px; 
+            height: 25px; 
+            background-color: #1a86f2; 
+            border-radius: 50%; 
+            position: absolute; 
+            right: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+        }
+
+
+        .circle {
+           display: inline-block;
+           width: 15px; 
+           height: 15px;
+           background-color: #0080ff; 
+           border-radius: 50%;
+           border: 2px solid white;
+           margin-left: 10px; 
+        }
+
+
+        .white-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 10px 10px; 
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: transparent; 
+        }
+
+        .search-box input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            outline: none;
+            width: 85%;
+            font-size: 16px;
+        }
+
+        .search-box button {
+            background-color: #1a86f2;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .search-box button img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pokemon-card {
+            display: none;
+            background-color: #f5f5f5; 
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        .pokemon-card img {
+            width: 120px;
+            height: 120px;
+            background-color: #e0e0e0; 
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .pokemon-card h2 {
+            margin: 10px 0;
+            font-size: 22px;
+        }
+
+        .pokemon-card .info {
+            margin-top: 10px;
+        }
+
+        .pokemon-info-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .pokemon-info-container span {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .pokemon-type {
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .pokemon-weight {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .pokemon-card .base-stats {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .pokemon-card .progress-bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pokemon-card .progress-bar {
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            flex: 1; 
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .pokemon-card .progress-bar span {
+            display: block;
+            height: 100%; 
+            background-color: #0080ff;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .pokedex-container {
+                width: 90%;
+            }
+
+            .search-box input {
+                width: 70%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pokedex-container">
+        <div class="pokedex-header">Pokédex
+            <span class="circle"></span>
+            
+        </div>
+        
+        <div class="white-section">
+            <div class="search-box">
+                <input type="text" id="pokeName" placeholder="Enter Pokémon name" />
+                <button onclick="fetchPokemon()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/54/54481.png" alt="Search">
+                </button>
+            </div>
+
+            <div id="errorMsg" class="error"></div>
+            <div id="pokeCard" class="pokemon-card">
+                <h2 id="pokeNameDisplay"></h2>
+                <img id="pokeImage" alt="Pokemon Image">
+                
+                <div class="info">
+                    <div class="pokemon-info-container">
+                        <span>Type: <span id="pokeType" class="pokemon-type"></span></span>
+                        <span>Height: <span id="pokeHeight"></span></span>
+                    </div>
+                    <div class="pokemon-weight">
+                        <span>Weight: <span id="pokeWeight"></span></span>
+                    </div>
+                </div>
+
+                <div class="base-stats">
+                    <h3>Base Stats:</h3>
+                    <div class="progress-bar-container">
+                        <span>HP:</span>
+                        <div class="progress-bar"><span id="pokeHp" style="width: 0;"></span></div>
+                        <span id="hpValue">0</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <span>Attack:</span>
+                        <div class="progress-bar"><span id="pokeAttack" style="width: 0;"></span></div>
+                        <span id="attackValue">0</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <span>Defense:</span>
+                        <div class="progress-bar"><span id="pokeDefense" style="width: 0;"></span></div>
+                        <span id="defenseValue">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="task2.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
